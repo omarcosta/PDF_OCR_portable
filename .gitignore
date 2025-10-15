@@ -1,0 +1,51 @@
+# Virtual environments (venv)
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+*/env/
+*/venv/
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Logs
+*.log
+keylog.txt
+
+# Secrets / keys / local config
+secret.key
+*.key
+.env
+.env.local
+
+# Distribution / build
+build/
+dist/
+*.egg-info/
+pip-wheel-metadata/
+
+# Test reports / caches
+.coverage
+.tox/
+.pytest_cache/
+
+# Editors / OS
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Windows specific
+*.pyw      # (opcional: remova se quiser versionar scripts .pyw explicitamente)
+
+# Dados confidênciais (PDFs e testes)
+test/*.pdf
+01 - PDFs para convercao/*.pdf
+02 - PDFs Pesquisaveis/*.pdf
+04 - Logs/*.txt
