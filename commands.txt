@@ -28,3 +28,8 @@ Download: https://ghostscript.com/releases/gsdnld.html
 ## Execução
 ocrmypdf -l por "entrada.pdf" "saida_pesquisavel.pdf"
 ocrmypdf --force-ocr -l por "entrada.pdf" "saida.pdf"
+
+## Backup das variaveis de ambiente
+C:\Program Files\gs\gs10.06.0
+C:\Program Files\gs\gs10.06.0\bin
+C:\Program Files\Tesseract-OCR

@@ -1,5 +1,58 @@
 @echo off
-TITLE Processador de PDFs com OCR
+TITLE Processador de PDFs com OCR - v2.0 (Portatil)
+
+REM =================================================================
+REM              DESCOMPACTACAO AUTOMATICA DAS DEPENDENCIAS
+REM =================================================================
+echo Verificando dependencias...
+
+SET "TESS_ZIP=%CD%\bin\tesseract.zip"
+SET "TESS_DIR=%CD%\bin\tesseract"
+SET "GS_ZIP=%CD%\bin\ghostscript.zip"
+SET "GS_DIR=%CD%\bin\ghostscript"
+
+REM --- Verifica e extrai o Tesseract ---
+if not exist "%TESS_DIR%\" (
+    if not exist "%TESS_ZIP%" (
+        echo ERRO: Arquivo '%TESS_ZIP%' nao encontrado!
+        pause
+        exit /b
+    )
+    echo Pasta 'tesseract' nao encontrada. Extraindo de %TESS_ZIP%...
+    echo Por favor, aguarde, isso pode levar um momento.
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -Path '%TESS_ZIP%' -DestinationPath '%TESS_DIR%' -Force"
+)
+
+REM --- Verifica e extrai o Ghostscript ---
+if not exist "%GS_DIR%\" (
+    if not exist "%GS_ZIP%" (
+        echo ERRO: Arquivo '%GS_ZIP%' nao encontrado!
+        pause
+        exit /b
+    )
+    echo Pasta 'ghostscript' nao encontrada. Extraindo de %GS_ZIP%...
+    echo Por favor, aguarde...
+    powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "Expand-Archive -Path '%GS_ZIP%' -DestinationPath '%GS_DIR%' -Force"
+)
+
+REM =================================================================
+REM               CONFIGURACAO DE AMBIENTE PORTATIL
+REM =================================================================
+
+REM Adiciona os executaveis locais (agora extraidos) ao PATH desta sessao.
+SET PATH=%CD%\bin\tesseract;%CD%\bin\ghostscript\bin;%PATH%
+
+REM Verifica se os comandos agora sao encontrados
+where tesseract >nul 2>nul || (
+    echo ERRO: Nao foi possivel encontrar tesseract.exe. A extracao pode ter falhado.
+    pause
+    exit /b
+)
+where gswin64c >nul 2>nul || (
+    echo ERRO: Nao foi possivel encontrar gswin64c.exe. A extracao pode ter falhado.
+    pause
+    exit /b
+)
 
 REM =================================================================
 REM              CONFIGURACAO E VERIFICACAO INICIAL

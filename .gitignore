@@ -49,3 +49,5 @@ test/*.pdf
 01 - PDFs para convercao/*.pdf
 02 - PDFs Pesquisaveis/*.pdf
 04 - Logs/*.txt
+bin/tesseract
+bin/ghostscript
