@@ -1,22 +1,19 @@
 @echo off
-TITLE Processador de PDFs com OCR e Log
+TITLE Processador de PDFs com OCR
 
 REM =================================================================
 REM              CONFIGURACAO E VERIFICACAO INICIAL
 REM =================================================================
 
-REM Define os nomes das pastas para facilitar a manutencao
 SET "PASTA_ENTRADA=01 - PDFs para convercao"
 SET "PASTA_SAIDA=02 - PDFs Pesquisaveis"
 SET "PASTA_LOG=04 - Logs"
 SET "VENV_PATH=.\env\Scripts\activate.bat"
 
-REM Cria as pastas, caso elas nao existam
 if not exist "%PASTA_ENTRADA%" mkdir "%PASTA_ENTRADA%"
 if not exist "%PASTA_SAIDA%" mkdir "%PASTA_SAIDA%"
 if not exist "%PASTA_LOG%" mkdir "%PASTA_LOG%"
 
-REM Verifica se o ambiente virtual (venv) existe
 if not exist "%VENV_PATH%" (
     echo.
     echo ERRO: Ambiente virtual nao encontrado em '.\env\Scripts\'
@@ -26,17 +23,13 @@ if not exist "%VENV_PATH%" (
     exit /b
 )
 
-
 REM =================================================================
-REM               PREPARACAO DO ARQUIVO DE LOG
+REM               PREPARACAO DO ARQUIVO DE LOG (ROBUST)
 REM =================================================================
 
-REM Formata a data e hora para um nome de arquivo valido
-REM Formato: YYYY.MM.DD-HH.MM.SS
-set today=%date:~6,4%.%date:~3,2%.%date:~0,2%
-set mytime=%time:~0,2%.%time:~3,2%.%time:~6,2%
-set logfile=%today%-%mytime%.txt
-set logfilepath=%PASTA_LOG%\%logfile%
+REM Cria um nome de arquivo de log usando um numero aleatorio para garantir que seja unico
+set logfile=log-%RANDOM%.txt
+set logfilepath="%PASTA_LOG%\%logfile%"
 
 
 REM =================================================================
@@ -55,7 +48,7 @@ echo Os resultados serao salvos em:
 echo "%PASTA_SAIDA%"
 echo.
 echo Um log detalhado sera gerado em:
-echo "%logfilepath%"
+echo %logfilepath%
 echo.
 echo Pressione qualquer tecla para comecar...
 pause > nul
@@ -65,7 +58,6 @@ REM =================================================================
 REM               ATIVACAO DO VENV E PROCESSAMENTO
 REM =================================================================
 
-REM Ativa o ambiente virtual. O 'CALL' eh essencial para que o controle retorne a este script.
 CALL %VENV_PATH%
 
 echo.
@@ -73,18 +65,16 @@ echo Ambiente virtual ativado. Iniciando a conversao...
 echo Processando... Por favor, aguarde.
 echo.
 
-REM Escreve o cabecalho no arquivo de log
-echo Log de Processamento de PDFs - %date% %time% > %logfilepath%
+REM Escreve o cabecalho no arquivo de log (usa aspas no caminho do arquivo)
+echo Log de Processamento de PDFs - %Year%/%Month%/%Day% %Hour%:%Minute%:%Second% > %logfilepath%
 echo. >> %logfilepath%
 
-REM Loop que processa cada arquivo PDF
 FOR %%f IN ("%PASTA_ENTRADA%\*.pdf") DO (
     echo Processando o arquivo: "%%~nf.pdf"
     
-    REM Executa o comando e verifica o resultado
-    ocrmypdf -l por "%%f" "%PASTA_SAIDA%\%%~nf.pdf"
+    # IMPORTANT! Chama o ocrmypdf para converter o PDF em um PDF pesquisavel
+    ocrmypdf --force-ocr -l por "%%f" "%PASTA_SAIDA%\%%~nf_pesquisavel.pdf"
     
-    REM %ERRORLEVEL% eh 0 para sucesso, e diferente de 0 para falha.
     IF %ERRORLEVEL% EQU 0 (
         echo   [SUCESSO] - "%%~nf.pdf" convertido com exito.
         echo SUCESSO: O arquivo "%%~f" foi convertido. >> %logfilepath%
@@ -93,7 +83,6 @@ FOR %%f IN ("%PASTA_ENTRADA%\*.pdf") DO (
         echo FALHA:   Ocorreu um erro ao processar "%%~f". >> %logfilepath%
     )
 )
-
 
 REM =================================================================
 REM                   FINALIZACAO
