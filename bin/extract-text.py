@@ -19,7 +19,7 @@ PROJECT_ROOT = os.path.dirname(SCRIPT_DIR)
 # Define os diretórios de origem e destino a partir da raiz do projeto.
 SOURCE_PDF_DIR = os.path.join(PROJECT_ROOT, "02 - PDFs Pesquisaveis")
 OUTPUT_DATA_DIR = os.path.join(PROJECT_ROOT, "03 - Dados")
-OUTPUT_FILE_PREFIX = "DADOS_EXTRAIDOS_"
+OUTPUT_FILE_PREFIX = "DADOS_"
 OUTPUT_FILE_EXTENSION = ".txt"
 
 # Lista de textos repetitivos (cabeçalhos/rodapés) a serem removidos.
