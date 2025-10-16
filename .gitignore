@@ -48,6 +48,7 @@ Thumbs.db
 test/*.pdf
 01 - PDFs para convercao/*.pdf
 02 - PDFs Pesquisaveis/*.pdf
+03 - Dados
 04 - Logs/*.txt
 bin/tesseract
 bin/ghostscript
