@@ -176,7 +176,7 @@ echo                   PROCESSO CONCLUIDO!
 echo ====================================================================
 echo.
 echo Pressione qualquer tecla para voltar ao menu principal...
-pause > nul
+timeout /t -1 > nul
 GOTO :MENU
 
 :QUIT
