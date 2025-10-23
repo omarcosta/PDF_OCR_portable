@@ -46,11 +46,61 @@ SET "VENV_PATH=.\env\Scripts\activate.bat"
 REM Garante que as pastas e o venv existem
 if not exist "%PASTA_ENTRADA%" mkdir "%PASTA_ENTRADA%"
 if not exist "%PASTA_SAIDA%" mkdir "%PASTA_SAIDA%"
-if not exist "%VENV_PATH%" (echo ERRO: Ambiente virtual em '.\env\' nao encontrado! Execute o setup.bat. && pause && exit /b)
-
-REM Ativa o ambiente virtual para todos os proximos comandos
-CALL %VENV_PATH%
-
+REM --- Verifica, cria e ativa o Ambiente Virtual (VENV) ---
+if not exist "%VENV_PATH%" (
+    echo.
+    echo Ambiente virtual 'env' nao encontrado.
+    echo Tentando criar e configurar automaticamente...
+    echo.
+    
+    REM 2.1 - Verifica se o Python "global" esta disponivel para criar o venv
+    where python >nul 2>nul
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERRO: Python nao encontrado no PATH do sistema. 
+        echo Nao e possivel criar o ambiente virtual.
+        echo Por favor, instale o Python (3.7+) e adicione-o ao PATH.
+        pause
+        exit /b
+    )
+    
+    REM 2.2 - Cria o ambiente virtual
+    echo Criando ambiente virtual em '.\env\'...
+    python -m venv env
+    
+    REM 2.3 - Verifica se a criacao falhou
+    if not exist "%VENV_PATH%" (
+        echo ERRO: Falha critica ao criar o ambiente virtual.
+        pause
+        exit /b
+    )
+    
+    echo Ambiente virtual criado com sucesso.
+    echo.
+    
+    REM 2.4 - Ativa o novo VENV para instalar pacotes
+    CALL "%VENV_PATH%"
+    
+    REM 2.5 - Instala as dependencias (PyPDF2 e ocrmypdf)
+    echo Instalando dependencias (PyPDF2, ocrmypdf)...
+    echo Isto pode demorar alguns minutos.
+    
+    REM O script usa ocrmypdf (para conversao) e PyPDF2 (provavelmente em extract-text.py)
+    pip install PyPDF2 ocrmypdf
+    
+    IF %ERRORLEVEL% NEQ 0 (
+        echo ERRO: Falha ao instalar as dependencias com o pip.
+        pause
+        exit /b
+    )
+    
+    echo Dependencias instaladas com sucesso.
+    echo.
+    
+) ELSE (
+    REM Ambiente ja existe, apenas ativa
+    echo Ativando ambiente virtual existente...
+    CALL %VENV_PATH%
+)
 REM =================================================================
 REM                   ETAPA 3: MENU PRINCIPAL
 REM =================================================================
