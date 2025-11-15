@@ -41,19 +41,19 @@ where gswin64c >nul 2>nul || (echo ERRO: Nao foi possivel encontrar gswin64c.exe
 REM Define as pastas de trabalho
 SET "PASTA_ENTRADA=01 - PDFs para convercao"
 SET "PASTA_SAIDA=02 - PDFs Pesquisaveis"
-SET "VENV_PATH=.\env\Scripts\activate.bat"
+SET "VENV_PATH=.\venv\Scripts\activate.bat"
 
 REM Garante que as pastas e o venv existem
 if not exist "%PASTA_ENTRADA%" mkdir "%PASTA_ENTRADA%"
 if not exist "%PASTA_SAIDA%" mkdir "%PASTA_SAIDA%"
-:: if not exist "%VENV_PATH%" (echo ERRO: Ambiente virtual em '.\env\' nao encontrado! Execute o setup.bat. && pause && exit /b)
+:: if not exist "%VENV_PATH%" (echo ERRO: Ambiente virtual em '.\venv\' nao encontrado! Execute o setup.bat. && pause && exit /b)
 
 REM Ativa o ambiente virtual para todos os proximos comandos
 :: CALL %VENV_PATH%
 
 if not exist "%VENV_PATH%" (
-    echo Ambiente virtual nao encontrado. Criando novo ambiente 'env'...
-    python -m venv env
+    echo Ambiente virtual nao encontrado. Criando novo ambiente 'venv'...
+    python -m venv venv
     if %ERRORLEVEL% neq 0 (
         echo ERRO: Falha ao criar o ambiente virtual. Verifique se o Python esta instalado.
         pause
@@ -61,9 +61,9 @@ if not exist "%VENV_PATH%" (
     )
     echo Ambiente virtual criado com sucesso.
     echo Instalando dependencia 'PyPDF2'...
-    call "%CD%\env\Scripts\activate.bat"
+    call "%CD%\venv\Scripts\activate.bat"
     python -m pip install --upgrade pip
-    python -m pip install PyPDF2
+    python -m pip install ocrmypdf PyPDF2
     echo Dependencia instalada com sucesso.
 )
 
@@ -193,8 +193,9 @@ echo ====================================================================
 echo                   PROCESSO CONCLUIDO!
 echo ====================================================================
 echo.
-echo Pressione qualquer tecla para voltar ao menu principal...
-timeout /t -1 > nul
+echo Pressione a tecla ENTER para voltar ao menu principal...
+REM timeout /t -1 > nul
+set /p "dummy=" > nul
 GOTO :MENU
 
 :QUIT
